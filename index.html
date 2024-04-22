@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+
+    <title>Assignment 5a</title>
+
+    Manju Shettar
+    mshettar@ucsc.edu
+</head>
+<body>
+    <canvas id="c"></canvas>
+    <div id="loading">
+        <div class="progress"><div class="progressbar"></div></div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/build/three.module.js';
+
+        function main() {
+            const canvas = document.querySelector('#c');
+            const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
+            
+            const fov = 75;
+            const aspect = 2;
+            const near = 0.1;
+            const far = 100;
+            const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+            camera.position.set(0, 0, 5);
+
+            const scene = new THREE.Scene();
+
+            // Add light source
+            const color = 0xFFFFFF;
+            const intensity = 1;
+            const light = new THREE.DirectionalLight(color, intensity);
+            light.position.set(-1, 2, 4);
+            scene.add(light);
+
+
+
+            const loader = new THREE.TextureLoader();
+            const texture = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg'); 
+            const cube = new THREE.Mesh(
+                new THREE.BoxGeometry(1, 1, 1),
+                new THREE.MeshPhongMaterial({map:texture})
+            );
+            scene.add(cube);
+
+            const sphere = new THREE.Mesh(
+                new THREE.SphereGeometry(0.7, 32, 32),
+                new THREE.MeshPhongMaterial({color: 0xffea00})
+            );
+            sphere.position.set(2, 0, 0);
+            scene.add(sphere);
+
+            const cylinder = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.5, 0.5, 1.5, 32),
+                new THREE.MeshPhongMaterial({color: 0x0000ff})
+            );
+            cylinder.position.set(-2, 0, 0);
+            scene.add(cylinder);
+
+            function render(time) {
+                time *= 0.001; // Convert time to seconds
+
+                cube.rotation.x = time;
+                cube.rotation.y = time;
+
+                renderer.render(scene, camera);
+                requestAnimationFrame(render);
+            }
+            requestAnimationFrame(render);
+        }
+
+        main();
+    </script>
+</body>
+
+</html>
